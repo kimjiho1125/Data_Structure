@@ -54,6 +54,15 @@ int main()
         return 0;
     }
 }
+int search(char *name){
+    int i;
+    for(i=0;i<n;i++){
+        if(strcmp(name,names[i])==0){
+            return i;
+        }
+    }
+    return -1;
+}
 
 void add()
 {
@@ -71,16 +80,11 @@ void find()
     char buf[BUFFER_SIZE];
     scanf("%s", buf);
 
-    int i;
-    for (i = 0; i < n; i++)
-    {
-        if (strcmp(buf, names[i]) == 0)
-        {
-            printf("%s\n", numbers[i]);
-            return;
-        }
-    }
-    printf("No person named '%s' exist.\n", buf);
+    int index = search(buf);
+    if(index==-1)
+        printf("No person named '%s' exist.\n", buf);
+    else
+        printf("%s\n", numbers[index]);
 }
 
 void status()
@@ -98,21 +102,20 @@ void remove()
     char buf[BUFFER_SIZE];
     scanf("%s", buf);
 
-    int i;
-    for (i = 0; i < n; i++)
-    {
-        if (strcmp(buf, names[i]) == 0)
-        {
-            names[i] = names[n - 1];
-            numbers[i] = numbers[n - 1];
-            n--;
-            printf("'%s' was deleted successfully. \n", buf);
-            return;
-        }
+    int index = search(buf);
+    if(index==-1){
+        printf("No person named '%s' exist. \n", buf);
+        return;
     }
-    printf("No person named '%s' exist. \n", buf);
+    int j= index;
+    for(;j<n-1;j++){
+        names[j] = names[j+1];
+        numbers[j] = numbers[j+1];
+    }
+    n--;
+    printf("'%s' was deleted successfully. \n", buf);
 }
-void load()
+void load() 
 {
     char fileName[BUFFER_SIZE];
     char buf1[BUFFER_SIZE];
@@ -154,4 +157,40 @@ void save(){
     }
 
     fclose(fp);
+}
+
+void save(){
+    int i;
+    char fileName[BUFFER_SIZE];
+    char tmp[BUFFER_SIZE];
+
+    scanf("%s", tmp);
+    scanf("%s", fileName);
+
+    FILE *fp = fopen(fileName,"w");
+    if(fp == NULL){
+        printf("Open failed.\n");
+        return;
+    }
+    for(i=0;i<n;i++){
+        fprintf(fp,"%s %s \n", names[i],numbers[i]);
+    }
+    fclose(fp);
+}
+
+void add(){
+    char buf1[BUFFER_SIZE], buf2[BUFFER_SIZE];
+    scanf("%s", buf1);
+    scanf("%s", buf2);
+
+    int i = n-1;
+    while(i>=0 && strcmp(names[i],buf1)>0){
+        names[i+1] = names[i];
+        numbers[i+1] = numbers[i];
+        i--;
+    }
+    names[i+1] = strdup(buf1);
+    numbers[i+1] = strdup(buf2);
+    n++;
+    printf("%s was added successfully.\n",buf1); 
 }
