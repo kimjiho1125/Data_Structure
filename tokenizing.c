@@ -3,8 +3,8 @@
 
 int main(void){
 
-    char str[] = "now # is the time # to start preparing ### for the exam #";
-    char delim[] = "#";
+    char str[] = "  study hard,     or  sleep.     ";
+    char delim[] = " ";
     char *token;
 
     token = strtok(str,delim);
